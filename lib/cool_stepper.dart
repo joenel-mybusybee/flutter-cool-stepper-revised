@@ -31,6 +31,9 @@ class CoolStepper extends StatefulWidget {
   /// default is false
   final bool showErrorSnackbar;
 
+  // perform action on counter clicked
+  final bool canJumpToStep;
+
   const CoolStepper({
     Key? key,
     required this.steps,
@@ -38,6 +41,7 @@ class CoolStepper extends StatefulWidget {
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 20.0),
     this.config = const CoolStepperConfig(),
     this.showErrorSnackbar = false,
+    required this.canJumpToStep
   }) : super(key: key);
 
   @override
@@ -119,6 +123,33 @@ class _CoolStepperState extends State<CoolStepper> {
     }
   }
 
+  Widget jumpToStepsListContainer(BuildContext dialogContext) {
+    return Container(
+      height: MediaQuery.of(context).size.height - 200,
+      width: MediaQuery.of(context).size.width - 50,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.steps.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  currentStep = index;
+                });
+                switchToPage(currentStep);
+                Navigator.pop(dialogContext);
+              },
+              child: ListTile(
+                leading: CircleAvatar(child: Text("${index+1}")),
+                title: Text(widget.steps[index].title),
+                // subtitle: Text(widget.steps[index].subtitle),
+              )
+            );
+          },
+        ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final content = Expanded(
@@ -135,11 +166,26 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = Container(
-      child: Text(
-        "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+    final counter = GestureDetector(
+      onTap: () {
+        if(widget.canJumpToStep) {
+          showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: Text('Jump to step'),
+                content: jumpToStepsListContainer(dialogContext),
+              );
+            }
+          );  
+        }
+      },
+      child: Container(
+        child: Text(
+          "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
