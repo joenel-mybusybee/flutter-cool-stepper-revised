@@ -127,26 +127,26 @@ class _CoolStepperState extends State<CoolStepper> {
     return Container(
       height: MediaQuery.of(context).size.height - 200,
       width: MediaQuery.of(context).size.width - 50,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.steps.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  currentStep = index;
-                });
-                switchToPage(currentStep);
-                Navigator.pop(dialogContext);
-              },
-              child: ListTile(
-                leading: CircleAvatar(child: Text("${index+1}")),
-                title: Text(widget.steps[index].title),
-                // subtitle: Text(widget.steps[index].subtitle),
-              )
-            );
-          },
-        ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: widget.steps.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                currentStep = index;
+              });
+              switchToPage(currentStep);
+              Navigator.pop(dialogContext);
+            },
+            child: ListTile(
+              leading: CircleAvatar(child: Text("${index+1}")),
+              title: Text(widget.steps[index].title),
+              // subtitle: Text(widget.steps[index].subtitle),
+            )
+          );
+        },
+      ),
     );
   }
 
@@ -166,8 +166,8 @@ class _CoolStepperState extends State<CoolStepper> {
       ),
     );
 
-    final counter = GestureDetector(
-      onTap: () {
+    final counter = TextButton(
+      onPressed: () {
         if(widget.canJumpToStep) {
           showDialog(
             context: context,
@@ -177,15 +177,14 @@ class _CoolStepperState extends State<CoolStepper> {
                 content: jumpToStepsListContainer(dialogContext),
               );
             }
-          );  
+          );
         }
       },
-      child: Container(
-        child: Text(
-          "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+      child: Text(
+        "${widget.config.stepText ?? 'STEP'} ${currentStep + 1} ${widget.config.ofText ?? 'OF'} ${widget.steps.length}",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.blue
         ),
       ),
     );
@@ -219,6 +218,7 @@ class _CoolStepperState extends State<CoolStepper> {
     }
 
     final buttons = Container(
+      color: Theme.of(context).primaryColor.withOpacity(0.1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -226,7 +226,7 @@ class _CoolStepperState extends State<CoolStepper> {
             onPressed: onStepBack,
             child: Text(
               getPrevLabel(),
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.grey[600]),
             ),
           ),
           counter,
@@ -235,7 +235,7 @@ class _CoolStepperState extends State<CoolStepper> {
             child: Text(
               getNextLabel(),
               style: TextStyle(
-                color: Colors.green,
+                color: Colors.blue,
               ),
             ),
           ),

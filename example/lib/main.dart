@@ -110,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
       steps: steps,
       config: CoolStepperConfig(
         backText: 'PREV',
-      ),
+      ), 
+      canJumpToStep: true,
     );
 
     return Scaffold(
